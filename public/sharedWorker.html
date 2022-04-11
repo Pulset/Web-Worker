@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="likeBtn">点赞</button>
+    <button id="decrease">踩</button>
+    <p>一共收获了<span id="likedCount">0</span>个👍</p>
+    <script>
+      let likeBtn = document.querySelector('#likeBtn');
+      let decreaseBtn = document.querySelector('#decrease');
+      let likedCountEl = document.querySelector('#likedCount');
+      console.log(window.SharedWorker)
+      let worker = new SharedWorker('./sharedWorker.js');
+      console.log('worker.port', worker);
+      worker.port.start();
+      likeBtn.addEventListener('click', function () {
+        worker.port.postMessage({ type: 'increase', payload: { count: 666 } });
+      });
+      decreaseBtn.addEventListener('click', function () {
+        worker.port.postMessage({ type: 'decrease', payload: { count: 666 } });
+      });
+      worker.port.onmessage = function (val) {
+        likedCountEl.innerHTML = val.data;
+      };
+    </script>
+  </body>
+</html>

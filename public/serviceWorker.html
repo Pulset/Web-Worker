@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>serviceWorker Demo</title>
+  </head>
+  <body>
+    <div>serviceWorker Demo</div>
+    <img src="./image/131.png" alt="131.png" />
+    <img src="./image/134.png" alt="134.png" />
+    <div id="kind"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker
+            // .register('./serviceWorker.js', { scope: '/page/' })
+            .register('./serviceWorker.js')
+            .then(
+              function (registration) {
+                // console.log(
+                //   'ServiceWorker registration successful with scope: ',
+                //   registration.scope
+                // );
+                var serviceWorker;
+                if (registration.installing) {
+                    serviceWorker = registration.installing;
+                    console.log('installing');
+                } else if (registration.waiting) {
+                    serviceWorker = registration.waiting;
+                    console.log('waiting');
+                } else if (registration.active) {
+                    serviceWorker = registration.active;
+                    console.log('active');
+                }
+                if (serviceWorker) {
+                    // logState(serviceWorker.state);
+                    serviceWorker.addEventListener('statechange', function (e) {
+                        console.log('statechange', e.target.state);
+                    });
+                }
+              },
+              function (err) {
+                console.log('ServiceWorker registration failed: ', err);
+              }
+            );
+        });
+      }
+    </script>
+  </body>
+</html>

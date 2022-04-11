@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h1>使用workder:</h1>
+      <p>点击开始计算按钮，系统开始从0加到10e10。</p>
+      <p>在使用workers的情况下，可以看到计算过程中，浏览器的UI线程不会卡住。</p>
+    </div>
+    <button style="padding: 10px; margin: 10px 0">开始计算</button>
+    <div>
+      <span>当前时间戳：</span>
+      <span class="time"></span>
+    </div>
+
+    <script>
+      const button = document.querySelector('button');
+      const worker = new Worker('./worker.js'); // 创建了一个worker
+      let time;
+      button.addEventListener('click', function () {
+        time = new Date();
+        worker.postMessage({ type: 'start', payload: { count: 43 } }); // 发送信息给worker
+      });
+
+      // 接收worker的信息
+      worker.onmessage = function (messageEvent) {
+        console.log('done,耗时：' + messageEvent.data + 'ms');
+      };
+
+      // 关闭worker
+      // worker.terminate();
+
+      // 计时器
+      const timeDom = document.querySelector('.time');
+
+      function updateTime() {
+        timeDom.innerHTML = +new Date();
+        requestAnimationFrame(updateTime);
+      }
+
+      requestAnimationFrame(updateTime);
+
+    </script>
+  </body>
+</html>

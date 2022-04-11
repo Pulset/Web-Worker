@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>test</div>
+    <button id="likeBtn">点赞</button>
+    <button id="decrease">踩</button>
+    <p>一共收获了<span id="likedCount">0</span>个👍</p>   
+    <script>
+      let worker = new SharedWorker('../sharedWorker.js');
+      let likedCountEl = document.querySelector('#likedCount');
+      worker.port.onmessage = function (val) {
+        likedCountEl.innerHTML = val.data;
+      };
+    </script>
+  </body>
+</html>
